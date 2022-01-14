@@ -1,10 +1,5 @@
 <template>
   <q-page class="flex flex-center">
-    <!-- <img
-      alt="Quasar logo"
-      src="../assets/logo.svg"
-      style="width: 200px; height: 200px"
-    /> -->
     <q-form>
       <div style="display: flex; justify-content: center">
         <h2 id="title">My form</h2>
@@ -22,7 +17,6 @@
           :validate-on-change="false"
         />
       </q-div>
-      <p>{{ race }}</p>
       <q-div class="elt-data">
         <q-input
           label="height"
@@ -31,7 +25,9 @@
           :error="heightError"
           :error-label="heightErrorLabel"
           :error-messages="heightErrorMessages"
-          :rules="heightRules"
+          :rules="[
+            (val) => (val >= 0 && val <= 300) || 'Must be between 0 and 300',
+          ]"
           :validate-on-blur="true"
           :validate-on-change="false"
         />
@@ -44,7 +40,11 @@
           :error="nameError"
           :error-label="nameErrorLabel"
           :error-messages="nameErrorMessages"
-          :rules="nameRules"
+          :rules="[
+            (val) =>
+              30 >= val.length() >= 3 ||
+              'Name should be between 3 and 30 characters',
+          ]"
           :validate-on-blur="true"
           :validate-on-change="false"
         />
@@ -57,23 +57,18 @@
           :error="powerError"
           :error-label="powerErrorLabel"
           :error-messages="powerErrorMessages"
-          :rules="powerRules"
+          :rules="[(val) => val > 0 || 'Please use a positive value']"
           :validate-on-blur="true"
           :validate-on-change="false"
         />
       </q-div>
       <q-div class="elt-data">
-        <q-input
-          label="Autofarm"
-          type="number"
+        <q-checkbox
           v-model="autofarm"
-          :error="autofarmError"
-          :error-label="autofarmErrorLabel"
-          :error-messages="autofarmErrorMessages"
-          :rules="autofarmRules"
-          :validate-on-blur="true"
-          :validate-on-change="false"
-        />
+          label="Autofarm"
+          right-label
+          color="autofarm"
+        ></q-checkbox>
       </q-div>
       <q-div class="elt-data">
         <q-input
@@ -83,7 +78,7 @@
           :error="magic - levelError"
           :error-label="magic - levelErrorLabel"
           :error-messages="magic - levelErrorMessages"
-          :rules="magic - levelRules"
+          :rules="[(val) => val > 0 || 'Please use a positive value']"
           :validate-on-blur="true"
           :validate-on-change="false"
         />
@@ -96,7 +91,7 @@
           :error="greed - levelError"
           :error-label="greed - levelErrorLabel"
           :error-messages="greed - levelErrorMessages"
-          :rules="greed - levelRules"
+          :rules="[(val) => val > 0 || 'Please use a positive value']"
           :validate-on-blur="true"
           :validate-on-change="false"
         />
@@ -117,6 +112,7 @@ form {
   background-color: rgb(240, 240, 240);
   border-radius: 10px;
   padding: 20px;
+  margin: 20px 30px;
 }
 .elt-data {
   display: flex;
@@ -155,8 +151,8 @@ export default {
     race: "",
     height: null,
     name: "",
-    power: "",
-    autofarm: "",
+    power: null,
+    autofarm: false,
     magiclevel: null,
     greedlevel: null,
   }),
@@ -166,12 +162,12 @@ export default {
       const doc = new YAML.Document();
       doc.contents = {
         race: this.race,
-        height: this.height,
+        height: parseInt(this.height),
         name: this.name,
-        power: this.power,
+        power: parseInt(this.power),
         autofarm: this.autofarm,
-        "magic-level": this.magiclevel,
-        "greed-level": this.greedlevel,
+        "magic-level": parseInt(this.magiclevel),
+        "greed-level": parseInt(this.greedlevel),
       };
       const test = {
         name: "test",

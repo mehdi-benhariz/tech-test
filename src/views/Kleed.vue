@@ -1,9 +1,8 @@
 <template>
-  <h1>This is Kleed page</h1>
-  <div v-if="Characters.length">
-    <div v-for="Character in Characters" :key="Character.id">
-      <div></div>
-      <p>{{ Character.title }}: {{ Character.value }}</p>
+  <h1>know more about kleed</h1>
+  <div v-if="character.length">
+    <div v-for="prop in character" :key="prop.id" id="card">
+      <p>{{ prop.title }}: {{ prop.value }}</p>
     </div>
   </div>
   <div v-else>
@@ -15,7 +14,7 @@
 export default {
   data() {
     return {
-      Characters: [],
+      character: [],
     };
   },
   methods: {
@@ -25,8 +24,7 @@ export default {
       );
       const data = await response.json();
       console.log(data);
-      this.Characters = data;
-      console.log({ character: this.Characters[0].title });
+      this.character = data;
     },
   },
   mounted() {
@@ -35,4 +33,19 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+#card {
+  background-color: #f5f5f5;
+  border-radius: 5px;
+  padding: 10px;
+  margin: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+#card p {
+  font-size: 1.2em;
+  font-weight: bold;
+  margin: 0;
+}
+</style>
